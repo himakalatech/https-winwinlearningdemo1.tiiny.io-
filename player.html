@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>courses</title>
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+    <!-- Custom CSS files -->
+    <link rel="stylesheet" href="css/st.css">
+    <link rel="stylesheet" href="css/player.css">
+    <style>
+        /* Styles for popup menu */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        .popup-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 5px;
+            border-radius: 2px;
+            z-index: 10000;
+            width: 90%; /* 90% of the viewport width */
+            height: 90%; /* 90% of the viewport height */
+            max-width: 1920px; /* Maximum width */
+            max-height: 1080px; /* Maximum height */
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        /* Responsive media queries */
+        @media (max-width: 767px) {
+            /* Mobile devices */
+            .popup-content {
+                width: 90%;
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <!-- Header content goes here -->
+    </header>
+
+    <div class="side-bar">
+        <!-- Sidebar content goes here -->
+    </div>
+
+    <!-- Popup Container -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content" id="popupContent">
+            <!-- Content will be loaded dynamically here -->
+            <span class="popup-close" onclick="closePopup()">Close</span>
+        </div>
+    </div>
+
+    <section class="playlist-videos courses">
+        <h3 class="heading">Phonics </h3>
+        <div class="container">
+            <div class="main-video">
+                <div class="video">
+                    <video src="./videos/phonics/29_LESSON_PHONICS_SUFFIX.mp4" id="mainVideo" controls controlsList="nodownload" muted></video>
+                    <h3 class="title">01. Introduction to Chapters</h3>
+                </div>
+            </div>
+            <div class="video-list">
+                <!-- Video playlist items go here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; copyright @ 2024 by <span> KalaTech</span> | all rights reserved!
+    </footer>
+
+    <!-- Custom JavaScript files -->
+    <script src="js/script.js"></script>
+    <script>
+        // Function to open the popup
+        function openPopup(pageUrl) {
+            var popupOverlay = document.getElementById('popupOverlay');
+            var popupContent = document.getElementById('popupContent');
+            // Load the content of the pageUrl into the popupContent
+            popupContent.innerHTML = '<object type="text/html" data="' + pageUrl + '" style="width:100%; height:100%;"></object>';
+            // Show the popup
+            popupOverlay.style.display = 'block';
+        }
+
+        function closePopup() {
+            var popupOverlay = document.getElementById('popupOverlay');
+            // Hide the popup
+            popupOverlay.style.display = 'none';
+        }
+
+        // Close the popup when user clicks outside the popup content
+        window.onclick = function(event) {
+            var popupOverlay = document.getElementById('popupOverlay');
+            if (event.target == popupOverlay) {
+                popupOverlay.style.display = "none";
+            }
+        };
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let listVideos = document.querySelectorAll('.video-list .vid');
+            let mainVideo = document.getElementById('mainVideo');
+            let title = document.querySelector('.main-video .title');
+
+            listVideos.forEach(video => {
+                video.onclick = () => {
+                    listVideos.forEach(vid => vid.classList.remove('active'));
+                    video.classList.add('active');
+                    if (video.classList.contains('active')) {
+                        let src = video.querySelector('video').getAttribute('src');
+                        mainVideo.src = src;
+                        let text = video.querySelector('.title').innerHTML;
+                        title.innerHTML = text;
+                    }
+                };
+            });
+        });
+    </script>
+
+    <script>
+        
+
+        document.addEventListener("DOMContentLoaded", function () {
+    let mainVideo = document.getElementById('mainVideo');
+    let durationDisplay = document.getElementById('durationDisplay');
+
+    // Function to update the duration display
+    function updateDurationDisplay() {
+        // Check if the video duration is available
+        if (!isNaN(mainVideo.duration)) {
+            // Update the duration display with the actual duration of the video
+            durationDisplay.textContent = formatTime(mainVideo.duration);
+        } else {
+            // If duration is not available yet, schedule another update after a short delay
+            setTimeout(updateDurationDisplay, 500); // Check every 500 milliseconds
+        }
+    }
+
+    // Listen for the 'loadedmetadata' event which is fired when the duration is available
+    mainVideo.addEventListener('loadedmetadata', updateDurationDisplay);
+
+    // Listen for the 'timeupdate' event which is fired continuously as the video plays
+    mainVideo.addEventListener('timeupdate', function() {
+        // Update the duration display with the current time and total duration of the video
+        durationDisplay.textContent = formatTime(mainVideo.currentTime) + " / " + formatTime(mainVideo.duration);
+    });
+
+    // Function to format time in HH:MM:SS format
+    function formatTime(seconds) {
+        let hours = Math.floor(seconds / 3600);
+        let minutes = Math.floor((seconds % 3600) / 60);
+        let remainingSeconds = Math.floor(seconds % 60);
+        return `${hours}:${minutes}:${remainingSeconds}`;
+    }
+});
+
+
+
+
+
+    </script>
+
+</body>
+</html>
